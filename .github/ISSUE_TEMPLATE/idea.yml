@@ -1,0 +1,11 @@
+name: Idea / style request
+description: A feature, a new video style, a sticker set
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like
+      description: For a style — link an example video and say what makes it work.
+    validations:
+      required: true

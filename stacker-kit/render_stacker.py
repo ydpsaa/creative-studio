@@ -12,12 +12,17 @@ Scenario (JSON, paths relative to the scenario file):
   counter      small series counter shown at the end of the intro, e.g. "01/30" (optional).
   caption_color captions colour of the talking part (default "#FFB547").
   talk_video   your shot for the talking part, cropped into the 4:3 band (optional). talk_offset — seconds of the
-               video that match voice t=0 (use 0 when the voice IS the video's own audio).
+               video that match voice t=0 (use 0 when the voice IS the video's own audio). For B-roll/screens that
+               are not your recording use talk_start — the second of that video to start from at the cut.
   pages        the intro, page by page:
                {"rows": ["you tell", "everyone", "your idea"], "sticker": "G01_ideas/01_light_bulb.png"}
                {"punch": "but"}                                        — one big word (or several, line by line)
                {"punch": "i'm done.", "sticker": "…", "tear": "done."}  — the last word tears around the sticker
-  sfx          true (default, sounds generated in code) | false | folder with tap/drop/punch/boom/cut .wav files.
+  sfx          true (default, sounds generated in code) | false | folder with your own .wav takes (key_1.wav, key_2.wav…,
+               enter, paper, rip, click — or tap/drop/punch/boom/cut for the impact style).
+  sfx_style    "typing" (default): words = keyboard keys, punch word = heavier key, sticker = paper, tear = paper rip,
+               cut = mouse click. Text never gets bass or punches. "impact": the older snap/thump/boom set.
+  format       "9:16" (default, 1080×1920 Reels) | "4:5" (1080×1350, Instagram feed / carousel next to photos).
 """
 from __future__ import annotations
 
@@ -36,6 +41,8 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 KIT = Path(__file__).resolve().parent
 W, H, FPS, SR = 1080, 1920, 30, 48000
 BY, BH = 554, 812                       # the 4:3 band inside 9:16
+FORMATS = {"9:16": (1920, 554, 812),     # Reels / Shorts / TikTok
+           "4:5": (1350, 270, 810)}      # Instagram feed & carousels (mixed photo + video posts)
 WHITE = (255, 255, 255)
 X_STEPS = [0.08, 0.30, 0.14, 0.24]      # each row has its own left offset (left / right / centre…)
 ANGLES = [-9, 7, -5, 6, -4]
@@ -152,22 +159,83 @@ def _lp(x: np.ndarray, k: int) -> np.ndarray:
     return np.convolve(x, np.ones(k) / k, mode="same")
 
 
-def synth(name: str) -> np.ndarray:
-    rng = np.random.default_rng(len(name))
-    if name == "tap":          # dry snap on every new line
+def _band(x: np.ndarray, lo: float, hi: float) -> np.ndarray:
+    """Band-pass by FFT mask (no extra dependencies)."""
+    X = np.fft.rfft(x)
+    f = np.fft.rfftfreq(len(x), 1 / SR)
+    X[(f < lo) | (f > hi)] = 0
+    return np.fft.irfft(X, len(x))
+
+
+def _tone(freq: float, n: int, tau: float) -> np.ndarray:
+    return np.sin(2 * np.pi * freq * np.arange(n) / SR) * _env(n, tau)
+
+
+def synth(name: str, variant: int = 0) -> np.ndarray:
+    """All sounds are generated here, so the kit carries no third-party audio.
+    TYPING set (default): text = keyboard/writing, never bass. IMPACT set: the older tap/drop/punch/boom/cut."""
+    rng = np.random.default_rng(hash((name, variant)) % 2**32)
+    if name in ("key", "enter"):       # mechanical key: plastic click + short body (thock) + quieter key-up
+        big = name == "enter"
+        n = int((.16 if big else .11) * SR)
+        x = np.zeros(n)
+        m = int(.004 * SR)
+        x[:m] += np.diff(rng.uniform(-1, 1, m + 1)) * _env(m, .0012)                          # contact click
+        x += _band(rng.uniform(-1, 1, n), 1800, 4200) * _env(n, .006) * .5                       # plastic ring
+        body = (95 if big else 190) * (1 + rng.uniform(-.08, .08))
+        x += _tone(body, n, .03 if big else .018) * (.55 if big else .35)                          # body, not bass
+        up = int(rng.uniform(.06, .085) * SR) if not big else int(.095 * SR)
+        k = min(m, n - up)
+        x[up:up + k] += np.diff(rng.uniform(-1, 1, k + 1)) * _env(k, .001) * .35                  # key-up
+    elif name == "click":              # mouse click: press + release
+        n = int(.12 * SR)
+        x = np.zeros(n)
+        for at, g in ((0, 1), (int(.065 * SR), .55)):
+            m = int(.003 * SR)
+            x[at:at + m] += np.diff(rng.uniform(-1, 1, m + 1)) * _env(m, .0008) * g
+        x += _band(x, 2500, 9000) * 2
+    elif name == "paper":              # a sticker lands: paper slap + crinkle, no low end
+        n = int(.32 * SR)
+        slap = _band(rng.uniform(-1, 1, n), 700, 5000) * _env(n, .025)
+        crk = np.zeros(n)
+        for at in rng.integers(0, int(.22 * SR), 70):
+            crk[at] += rng.uniform(.3, 1) * rng.choice([-1, 1])
+        crk = _band(crk, 2500, 9000) * _env(n, .09)
+        x = slap + crk * 1.4
+    elif name == "rip":                # the last word tears: paper rip
+        n = int(.55 * SR)
+        env = np.sin(np.linspace(0, np.pi, n)) ** .7 * np.linspace(1, .5, n)
+        imp = np.zeros(n)
+        for at in np.sort(rng.integers(0, n, 420)):
+            imp[at] += rng.uniform(.2, 1)
+        x = (_band(imp, 1200, 7000) * 1.6 + _band(rng.uniform(-1, 1, n), 1500, 6000) * .35) * env
+    elif name == "marker":             # marker on paper: short strokes of filtered friction
+        n = int(.6 * SR)
+        t = np.arange(n) / SR
+        strokes = np.clip(np.sin(2 * np.pi * 7 * t + rng.uniform(0, 3)), 0, 1) ** .6
+        x = _band(rng.uniform(-1, 1, n), 2500, 8500) * strokes * np.linspace(1, .7, n)
+    elif name == "pop":                # small 8-bit blip (pixel sprites)
+        n = int(.07 * SR)
+        f = np.linspace(700, 1300, n)
+        x = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * _env(n, .025) * .6
+    elif name == "tick":               # progress / UI tick
+        n = int(.03 * SR)
+        x = _tone(3200, n, .004)
+    # ---- IMPACT set (sfx_style: "impact")
+    elif name == "tap":
         n = int(.05 * SR)
         x = np.diff(rng.uniform(-1, 1, n + 1)) * _env(n, .006)
-    elif name == "drop":       # paper/wood slap + low thump when a sticker lands
+    elif name == "drop":
         n = int(.45 * SR)
         x = _lp(rng.uniform(-1, 1, n), 6) * _env(n, .03) * 1.4 + np.sin(2 * np.pi * 70 * np.arange(n) / SR) * _env(n, .12)
-    elif name == "punch":      # short trailer impact on the punch word
+    elif name == "punch":
         n = int(1.0 * SR)
         f = np.linspace(130, 42, n)
         x = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, .28) + _lp(rng.uniform(-1, 1, n), 12) * _env(n, .08)
-    elif name == "boom":       # deep low boom when the last word tears
+    elif name == "boom":
         n = int(1.6 * SR)
         x = np.tanh(2.2 * (np.sin(2 * np.pi * 41 * np.arange(n) / SR) * _env(n, .5)))
-    elif name == "cut":        # shutter-like double click on the cut to the talking part
+    elif name == "cut":
         n = int(.12 * SR)
         x = np.zeros(n)
         for at in (0, int(.035 * SR)):
@@ -179,13 +247,15 @@ def synth(name: str) -> np.ndarray:
     return np.stack([x, x], 1)
 
 
-def load_sfx(spec, name: str) -> np.ndarray:
+def load_sfx(spec, name: str, variant: int = 0) -> np.ndarray:
+    """A folder may hold name.wav or several takes name_1.wav, name_2.wav… (picked in turn, so typing never repeats)."""
     if isinstance(spec, str):
-        p = Path(spec) / f"{name}.wav"
-        if p.exists():
-            x = decode(p)
+        d = Path(spec)
+        takes = sorted(d.glob(f"{name}_*.wav")) or ([d / f"{name}.wav"] if (d / f"{name}.wav").exists() else [])
+        if takes:
+            x = decode(takes[variant % len(takes)])
             return x / (np.abs(x).max() + 1e-9)
-    return synth(name)
+    return synth(name, variant % 6)
 
 
 # ----------------------------------------------------------------- the stacker
@@ -194,6 +264,10 @@ class Stacker:
         self.path = scen_path
         self.base = scen_path.parent
         S = self.S = json.loads(scen_path.read_text(encoding="utf-8"))
+        global H, BY, BH
+        if S.get("format", "9:16") not in FORMATS:
+            sys.exit(f"format: {' | '.join(FORMATS)}")
+        H, BY, BH = FORMATS[S.get("format", "9:16")]
         self.band = hexrgb(S.get("band_color", "#0E1E5C"))
         self.cap_color = hexrgb(S.get("caption_color", "#FFB547"))
         self.voice = self.base / S["voice"] if S.get("voice") else None
@@ -286,9 +360,9 @@ class Stacker:
     def _captions(self) -> None:
         """2–4 words per caption, sentence-aware, no one-word orphans."""
         sents, cur = [], []
-        for w in self.rest:
+        for w in self.rest:            # break at sentence ends and at commas (a caption never runs across a comma)
             cur.append(w)
-            if w["w"][-1:] in ".?!…":
+            if w["w"][-1:] in ".?!…" or (w["w"][-1:] in ",;:" and len(cur) >= 2):
                 sents.append(cur)
                 cur = []
         if cur:
@@ -389,6 +463,21 @@ class Stacker:
 
     # -- sound
     def events(self) -> list[tuple[str, float, float]]:
+        if self.S.get("sfx_style", "typing") == "typing":
+            # text = keyboard (one key per word, a heavier key on the punch word); paper for stickers; rip for the tear
+            ev = []
+            for pg in self.pages:
+                toks = [t for r in pg["rows"] for t in r] if "rows" in pg else []
+                ev += [("key", t["t"], .5) for t in toks]
+                if "punch" in pg:
+                    ev += [("enter", t["t"], .6) for t in pg["punch"]]
+                if pg["sticker"] is not None:
+                    ev.append(("paper", pg["t_sticker"], .6))
+                if pg["tear"]:
+                    ev.append(("rip", pg["t_tear"], .55))
+            if self.rest or self.S.get("talk_video"):
+                ev.append(("click", self.intro_end, .5))
+            return ev + list(self.S.get("_extra_events", []))
         ev = []
         for pg in self.pages:
             if "rows" in pg:
@@ -415,8 +504,10 @@ class Stacker:
             if isinstance(spec, str):
                 spec = str(self.base / spec)
             cache: dict = {}
+            seen: dict = {}
             for name, at, g in self.events():
-                x = cache.setdefault(name, load_sfx(spec, name))
+                v = seen[name] = seen.get(name, -1) + 1
+                x = cache.setdefault((name, v % 6), load_sfx(spec, name, v))
                 i = max(0, int(at * SR))
                 j = min(n, i + len(x))
                 mix[i:j] += x[: j - i] * g * .8
@@ -431,7 +522,8 @@ class Stacker:
         return self._shots(self.base / tv) if tv else None
 
     def _shots(self, src: Path):
-        ss = self.intro_end + float(self.S.get("talk_offset", 0))
+        ss = (float(self.S["talk_start"]) if "talk_start" in self.S       # B-roll / screens: play from this second
+              else self.intro_end + float(self.S.get("talk_offset", 0)))  # own recording: stay in sync with the voice
         vf = f"fps={FPS},crop='min(iw,ih*4/3)':'min(ih,iw*3/4)',scale={W}:{BH}"
         p = subprocess.Popen([ffmpeg(), "-loglevel", "error", "-ss", f"{ss:.3f}", "-i", str(src), "-an", "-vf", vf,
                               "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)

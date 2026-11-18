@@ -9,7 +9,9 @@ Creative Studio is a local studio for creators. You feed it videos you learn fro
 > **Don't want to install anything?** Use the hosted version: **[Creative Studio online →](https://dolishx-creative-studio.pan-manager.chatgpt.site)**
 > The same workflow in the browser, no setup.
 
-![STACKER kit — demo frames](stacker-kit/examples/preview.jpg)
+[![CI](https://github.com/ydpsaa/creative-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/ydpsaa/creative-studio/actions/workflows/ci.yml)
+
+![STACKER — words on the voice, stickers on the key words](stacker-kit/examples/demo.gif)
 
 ## What it does
 
@@ -18,7 +20,7 @@ Creative Studio is a local studio for creators. You feed it videos you learn fro
 | **Learn from videos** | Drop in a video, a link or a note. Everything runs locally:<br>• speech is transcribed with word timings;<br>• frames are sampled at every scene cut and on a grid;<br>• on-screen text is read with OCR;<br>• the sound is mapped: speech, music, effects, loudness.<br>Your AI looks at the frames, writes a structured analysis and saves **method cards**, each linked to the exact second it came from. |
 | **Make videos** | Write a brief: brand, goal, audience, platform, duration, voice. The studio picks matching methods and builds a context pack. Your AI writes the concept, hooks, script, voice-over and a storyboard that says why each scene works. You export a ZIP for your editor. |
 | **Work through your AI** | A built-in **MCP server**: Claude Code, Claude Desktop, Codex, Cursor and other MCP clients can drive the studio in plain language. Ready-made **Claude skills** cover analysis, knowledge extraction, production and the STACKER style. |
-| **STACKER kit** | A word-stack style with a guide, a renderer, **162 die-cut stickers** and generated sound design. Record your voice → `./studio stacker scenario.json` → MP4. [Open the kit →](stacker-kit/README.md) |
+| **STACKER kit** | A word-stack style with a guide, a renderer, **162 die-cut stickers** and text-first sound design (words are typed, not hit). Build it on the **Стакер** page in the app — pages, stickers from the catalog, your voice, preview frames, one button to render — or from the CLI: `./studio stacker scenario.json`. 9:16 for Reels, 4:5 for carousels. [Open the kit →](stacker-kit/README.md) |
 | **Review board** | One page to pick, reject and comment on everything your AI generated: stickers, test videos, sounds, style docs. Your AI reads your decisions back through MCP. |
 
 ## How it works
@@ -51,6 +53,7 @@ git clone https://github.com/ydpsaa/creative-studio.git && cd creative-studio
 uv venv --python 3.13 .venv
 uv pip install --python .venv/bin/python -r requirements.lock.txt
 (cd app/web && npm install && npm run build)
+./studio doctor         # checks everything and tells you how to fix what is missing
 ./studio start          # → http://127.0.0.1:8765
 ```
 
@@ -84,6 +87,14 @@ Things to ask:
 - **Honest coverage.** A transcript is not a visual analysis. A sample of frames is not every frame. The AI doesn't hear audio: the sound map is model estimates, and the studio says so.
 - **Your data stays local.** Everything lives in `studio-data/` on your Mac. The API listens only on 127.0.0.1.
 - **Other people's videos are a source of methods, not of footage.** Media is never downloaded behind logins. A closed link becomes "add the file yourself".
+
+## Roadmap
+- [x] Open-source studio + MCP server + Claude skills
+- [x] STACKER kit, STACKER page in the app, `./studio doctor`
+- [ ] English interface
+- [ ] One-click setup (installer)
+- [ ] PIXEL style kit
+- [ ] Creative Studio online — no install, works with ChatGPT too
 
 ## Updates
 

@@ -14,7 +14,9 @@ The UI is in Russian; answer the user in their language.
 - `./studio import-analysis <src_id> answer.json [--dry-run]` — the **only** way to add an analysis (schema: `config/schemas/analysis.schema.md`).
 - `./studio pack <prj_id>` · `./studio import-project <prj_id> docs.json` · `./studio export <prj_id>`
 - `./studio dense <src> <t0> <t1> --step 0.1` — dense frames for short inserts · `./studio coverage-report [src]`
-- `./studio stacker <scenario.json> [--preview 1,2.5]` — STACKER video (`stacker-kit/README.md`)
+- `./studio stacker <scenario.json> [--preview 1,2.5]` — STACKER video (`stacker-kit/README.md`); the same flow is the «Стакер» page in the UI
+- `./studio doctor [--json]` — environment check with exact fixes; `python tests/ci_smoke.py` — fast checks (CI)
+- STACKER sound rule: text = keyboard/writing (key, enter), sticker = paper, tear = rip, cut = click; never bass on text
 - `./studio review-scan` · `review-feedback [--since ISO]` · `review-handled <id> "note"`
 - `./studio mcp` — MCP server (see `docs/MCP.md`). Tests: `.venv/bin/python tests/acceptance.py` (isolated data dir).
 

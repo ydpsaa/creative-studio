@@ -92,6 +92,8 @@ def main(argv=None):
     sub.add_parser("sync-once", help="один проход синхронизации (дожидается текущей задачи)")
     a = sub.add_parser("cancel")
     a.add_argument("job_id")
+    a = sub.add_parser("doctor", help="проверить установку: система, пакеты, модели, интерфейс, база, порт")
+    a.add_argument("--json", action="store_true")
     sub.add_parser("review-scan", help="«Ревью»: (пере)сканировать сгенерированные ассеты (config/review_sets.json)")
     a = sub.add_parser("review-feedback", help="«Ревью»: решения и запросы владельца для Claude (JSON)")
     a.add_argument("--since", default=None, help="ISO-время: только решения после него")
@@ -226,6 +228,9 @@ def main(argv=None):
         site_sync.loop(once=args.cmd == "sync-once")
     elif args.cmd == "cancel":
         _p(jobs.cancel(con, args.job_id))
+    elif args.cmd == "doctor":
+        from . import doctor
+        sys.exit(doctor.report(args.json))
     elif args.cmd == "review-scan":
         from . import review
         _p(review.scan(con))

@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: app/web/package-lock.json
+      - name: Python deps (portable subset — MLX / Apple Vision / models are macOS-only)
+        run: pip install fastapi uvicorn python-multipart pydantic httpx pillow numpy imageio-ffmpeg "mcp>=2.3,<3"
+      - name: Compile all Python
+        run: python -m compileall -q app/api stacker-kit
+      - name: Build the UI
+        run: cd app/web && npm ci && npm run build
+      - name: Smoke test (API, UI, STACKER render, Review, doctor)
+        run: python tests/ci_smoke.py
+      - name: STACKER demo render
+        run: python stacker-kit/render_stacker.py stacker-kit/examples/im_done.json --out /tmp/demo.mp4

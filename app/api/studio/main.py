@@ -605,6 +605,76 @@ def review_thumb(iid: str):
     return FileResponse(p, media_type=media.mime_for(p), headers={"Cache-Control": "max-age=86400"})
 
 
+# ------------------------------------------------------------------ STACKER («Стакер»)
+def _stk(fn):
+    from . import stacker
+    try:
+        return fn(stacker)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/api/stacker/stickers")
+def stk_stickers():
+    return _stk(lambda s: s.stickers())
+
+
+@app.get("/api/stacker/sticker/{group}/{name}")
+def stk_sticker(group: str, name: str):
+    p = _stk(lambda s: s.sticker_path(group, name))
+    return FileResponse(p, media_type="image/png", headers={"Cache-Control": "max-age=86400"})
+
+
+@app.get("/api/stacker/projects")
+def stk_list():
+    return _stk(lambda s: s.list_projects())
+
+
+@app.post("/api/stacker/projects")
+def stk_create(body: dict = Body(default={})):
+    return _stk(lambda s: s.create(body.get("title", "")))
+
+
+@app.get("/api/stacker/projects/{pid}")
+def stk_get(pid: str):
+    return _stk(lambda s: s.get(pid))
+
+
+@app.put("/api/stacker/projects/{pid}")
+def stk_save(pid: str, body: dict = Body(...)):
+    return _stk(lambda s: s.save(pid, body))
+
+
+@app.post("/api/stacker/projects/{pid}/preview")
+def stk_preview(pid: str, body: dict = Body(default={})):
+    return _stk(lambda s: s.preview(pid, body.get("times")))
+
+
+@app.post("/api/stacker/projects/{pid}/render")
+def stk_render(pid: str):
+    return _stk(lambda s: s.render(pid))
+
+
+@app.post("/api/stacker/projects/{pid}/{kind}")
+def stk_attach(pid: str, kind: str, file: UploadFile = File(...)):
+    if kind not in ("voice", "talk"):
+        raise HTTPException(404)
+    data = file.file.read()
+    return _stk(lambda s: s.attach(pid, kind, file.filename or "file", data))
+
+
+@app.delete("/api/stacker/projects/{pid}/{kind}")
+def stk_detach(pid: str, kind: str):
+    if kind not in ("voice", "talk"):
+        raise HTTPException(404)
+    return _stk(lambda s: s.detach(pid, kind))
+
+
+@app.delete("/api/stacker/projects/{pid}")
+def stk_delete(pid: str):
+    return _stk(lambda s: s.delete(pid))
+
+
 # ------------------------------------------------------------------ static UI
 @app.get("/{full_path:path}")
 def spa(full_path: str):

@@ -31,14 +31,14 @@ This kit has everything you need to make one today:
 
 **Talking part.** After a hard cut, the author speaks in the same 4:3 band. Captions show one phrase of 2–4 words at a time, centred at chest/chin height, in one accent colour (ours: amber `#FFB547`), with no outline and no box.
 
-**Sound.** The intro has sound; the talking part is voice only.
-- a dry snap on every new line;
-- a paper/wood slap and a low thump when a sticker lands;
-- a short impact on the punch word;
-- a deep low boom when the last word tears;
-- a shutter click on the cut to the author.
+**Sound: text is typed, not hit.** The intro has sound; the talking part is voice only.
+- every word → one key press (several takes, so it never sounds machine-made);
+- the punch word → a heavier key (still a keyboard — no bass, no "whoosh-boom" on text);
+- a sticker lands → paper;
+- the last word tears → paper ripping;
+- the cut to the author → a mouse click.
 
-The renderer generates all five sounds in code, so you don't need any licence. You can also drop in your own sounds.
+Default sounds are generated in code (no licences). For the best result **record your own**: 30 s of typing on your keyboard, a few paper crumples — and cut them into takes with `tools/make_sfx_takes.py` (§4). The older impact set (snap / thump / boom) is still there: `"sfx_style": "impact"`.
 
 **Pace.** Give the voice a short pause (0.3–0.6 s) after each phrase that gets a sticker, and ~1.5 s after the last intro word, so the tear can be seen.
 
@@ -80,6 +80,9 @@ Try the demo right away (no voice needed):
 ./studio stacker stacker-kit/examples/im_done.json
 ```
 
+### Or in the app
+`./studio start` → **Стакер** page: write the pages, pick stickers from the catalog, upload your voice and your shot, look at the preview frames, press «Собрать видео».
+
 ### Let your AI do it
 With Creative Studio connected to Claude Code (see [docs/CONNECT.md](../docs/CONNECT.md)), just ask: *"Make a stacker video from my recording ~/Movies/take3.mov about why I stopped announcing ideas"*. The skill [.claude/skills/stacker-video](../.claude/skills/stacker-video/SKILL.md) tells Claude how to:
 - write the pages;
@@ -97,6 +100,15 @@ With Creative Studio connected to Claude Code (see [docs/CONNECT.md](../docs/CON
    ```bash
    .venv/bin/python stacker-kit/tools/make_stickers.py G19_coffee grid.png "coffee cup" "laptop" … (9 names)
    ```
+
+## 4. Your own sounds
+
+```bash
+.venv/bin/python stacker-kit/tools/make_sfx_takes.py typing.m4a --name key   --out my-sfx
+.venv/bin/python stacker-kit/tools/make_sfx_takes.py enter.m4a  --name enter --out my-sfx --count 4
+.venv/bin/python stacker-kit/tools/make_sfx_takes.py paper.m4a  --name paper --out my-sfx --len 0.35 --count 3
+```
+Then add `"sfx": "my-sfx"` to the scenario. Record with short pauses between hits; the tool keeps only clean single hits.
 
 ## Licence
 
