@@ -1,0 +1,290 @@
+[
+ {
+  "id": "G01",
+  "slug": "ideas",
+  "title": "Идеи и голова",
+  "items": [
+   "light bulb",
+   "human brain model",
+   "blank open notebook",
+   "pencil",
+   "eraser",
+   "crumpled paper ball",
+   "sticky note pad",
+   "magnifying glass",
+   "jigsaw puzzle piece"
+  ]
+ },
+ {
+  "id": "G02",
+  "slug": "phone",
+  "title": "Телефон и лента",
+  "items": [
+   "smartphone",
+   "smartphone with cracked screen",
+   "phone charging cable",
+   "wireless earbuds",
+   "selfie stick",
+   "ring light",
+   "dslr camera",
+   "vintage crt television",
+   "tv remote control"
+  ]
+ },
+ {
+  "id": "G03",
+  "slug": "time",
+  "title": "Время",
+  "items": [
+   "hourglass",
+   "twin bell alarm clock",
+   "wristwatch",
+   "tear-off calendar",
+   "stopwatch",
+   "pocket watch",
+   "burning candle",
+   "egg timer",
+   "metronome"
+  ]
+ },
+ {
+  "id": "G04",
+  "slug": "money",
+  "title": "Деньги и бизнес",
+  "items": [
+   "stack of coins",
+   "rolled banknotes with rubber band",
+   "piggy bank",
+   "leather wallet",
+   "price tag",
+   "long paper receipt",
+   "briefcase",
+   "vintage cash register",
+   "safe box"
+  ]
+ },
+ {
+  "id": "G05",
+  "slug": "build",
+  "title": "Строить",
+  "items": [
+   "claw hammer",
+   "wrench",
+   "brick",
+   "wooden ladder",
+   "metal toolbox",
+   "hard hat",
+   "rolled blueprint",
+   "screwdriver",
+   "measuring tape"
+  ]
+ },
+ {
+  "id": "G06",
+  "slug": "tech",
+  "title": "Техника и AI",
+  "items": [
+   "laptop",
+   "mechanical keyboard",
+   "computer mouse",
+   "toy robot",
+   "microchip",
+   "floppy disk",
+   "usb flash drive",
+   "old computer monitor",
+   "circuit board"
+  ]
+ },
+ {
+  "id": "G07",
+  "slug": "hands",
+  "title": "Руки-жесты",
+  "items": [
+   "hand thumbs up",
+   "hand pointing finger",
+   "clenched fist",
+   "open palm hand",
+   "hand peace sign",
+   "hand ok sign",
+   "two hands shaking",
+   "hand holding a pen",
+   "hand thumbs down"
+  ]
+ },
+ {
+  "id": "G08",
+  "slug": "heal",
+  "title": "Боль и восстановление",
+  "items": [
+   "adhesive bandage",
+   "anatomical heart",
+   "hand mirror",
+   "theatre mask",
+   "pill capsule",
+   "bandage roll",
+   "stethoscope",
+   "tissue box",
+   "ice pack"
+  ]
+ },
+ {
+  "id": "G09",
+  "slug": "strength",
+  "title": "Сила и дисциплина",
+  "items": [
+   "dumbbell",
+   "kettlebell",
+   "running shoe",
+   "boxing glove",
+   "medal on ribbon",
+   "trophy cup",
+   "jump rope",
+   "water bottle",
+   "barbell weight plate"
+  ]
+ },
+ {
+  "id": "G10",
+  "slug": "path",
+  "title": "Путь и выбор",
+  "items": [
+   "closed wooden door",
+   "old key",
+   "padlock",
+   "arrow road sign",
+   "compass",
+   "folded paper map",
+   "wooden signpost",
+   "old lantern",
+   "open door"
+  ]
+ },
+ {
+  "id": "G11",
+  "slug": "talk",
+  "title": "Говорить",
+  "items": [
+   "vintage telephone",
+   "walkie talkie",
+   "lavalier microphone",
+   "headphones",
+   "megaphone",
+   "envelope",
+   "paper airplane",
+   "typewriter",
+   "mailbox"
+  ]
+ },
+ {
+  "id": "G12",
+  "slug": "bait",
+  "title": "Внимание и ловушки",
+  "items": [
+   "fishing hook",
+   "horseshoe magnet",
+   "slot machine",
+   "wrapped candy",
+   "popcorn bucket",
+   "mouse trap",
+   "dartboard with dart",
+   "hypnosis spiral disc",
+   "rabbit trap cage"
+  ]
+ },
+ {
+  "id": "G13",
+  "slug": "grow",
+  "title": "Рост и природа",
+  "items": [
+   "seedling sprout in soil",
+   "potted plant",
+   "tree stump",
+   "smooth stone",
+   "single flower",
+   "feather",
+   "egg",
+   "cactus",
+   "acorn"
+  ]
+ },
+ {
+  "id": "G14",
+  "slug": "energy",
+  "title": "Энергия",
+  "items": [
+   "matchstick",
+   "lighter",
+   "full battery",
+   "empty battery",
+   "power plug",
+   "coffee cup",
+   "energy drink can",
+   "light switch",
+   "jumper cables"
+  ]
+ },
+ {
+  "id": "G15",
+  "slug": "home",
+  "title": "Дом и быт",
+  "items": [
+   "ceramic mug",
+   "wooden chair",
+   "pillow",
+   "desk lamp",
+   "eyeglasses",
+   "keys on a ring",
+   "backpack",
+   "sneakers",
+   "umbrella"
+  ]
+ },
+ {
+  "id": "G16",
+  "slug": "classic",
+  "title": "Классика",
+  "items": [
+   "greek statue head",
+   "thinker statue",
+   "greek column",
+   "laurel wreath",
+   "chess king",
+   "chess pawn",
+   "scales of justice",
+   "anchor",
+   "crown"
+  ]
+ },
+ {
+  "id": "G17",
+  "slug": "learn",
+  "title": "Учёба",
+  "items": [
+   "stack of books",
+   "open book",
+   "graduation cap",
+   "chalkboard",
+   "desk globe",
+   "ruler",
+   "calculator",
+   "microscope",
+   "telescope"
+  ]
+ },
+ {
+  "id": "G18",
+  "slug": "symbols",
+  "title": "Символы",
+  "items": [
+   "toy rocket",
+   "paper boat",
+   "rubber duck",
+   "pair of dice",
+   "playing card",
+   "balloon",
+   "gift box",
+   "broken chain",
+   "rope knot"
+  ]
+ }
+]

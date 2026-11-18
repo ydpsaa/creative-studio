@@ -1,0 +1,97 @@
+{
+  "schema": "recipes/1",
+  "note": "Рецепт = цель пользователя «хочу отсюда получить…». Говорит модели, на что смотреть, какие данные взять и какие карточки создать. Этапы со статусом missing ещё не установлены в студии — модель должна прямо сообщить пользователю об ограничении.",
+  "recipes": {
+    "full": {
+      "label": "Полная методика",
+      "ask": "Разобрать ролик целиком: структура, хук, монтаж, звук, приёмы.",
+      "data": ["transcript", "ocr", "frames", "sound"],
+      "focus": "Все разделы analysis/1. Карточки — по каждому повторяемому приёму.",
+      "categories": ["scripting", "hooks", "storytelling", "cinematography", "editing", "sound", "visual-styles", "workflows"],
+      "dense": null,
+      "missing": []
+    },
+    "text": {
+      "label": "Текст и сценарий",
+      "ask": "Получить текст ролика и понять, как он построен.",
+      "data": ["transcript", "ocr"],
+      "focus": "timeline.speech, structure (хук → развитие → доказательство → поворот → финал → CTA), приёмы речи, темп слов в минуту. Карточки kind=script_structure / rule.",
+      "categories": ["scripting", "storytelling"],
+      "dense": null,
+      "missing": []
+    },
+    "hooks": {
+      "label": "Хуки",
+      "ask": "Понять, чем ролик цепляет в первые секунды.",
+      "data": ["transcript", "ocr", "frames", "sound"],
+      "focus": "Первые 0–3 с: что сказано, что видно, что слышно, что меняется в кадре. Тип хука и почему держит (hypothesis, если автор не объясняет). Карточки kind=hook.",
+      "categories": ["hooks"],
+      "dense": {"t0": 0, "t1": 3.0, "step": 0.1},
+      "missing": []
+    },
+    "topic": {
+      "label": "Тема и подача",
+      "ask": "Понять тему, аудиторию, позиционирование и обещание ролика.",
+      "data": ["transcript", "ocr", "frames"],
+      "focus": "summary, для кого ролик, какое обещание, какая эмоция, как автор позиционирует себя. Карточки kind=rule / template, category=storytelling.",
+      "categories": ["storytelling", "scripting"],
+      "dense": null,
+      "missing": []
+    },
+    "transitions": {
+      "label": "Переходы и склейки",
+      "ask": "Научиться переходам и ритму монтажа.",
+      "data": ["frames", "sound"],
+      "focus": "editing.transitions и editing.pace: каждая смена сцены — тип перехода (жёсткая склейка, whip, зум-переход, маска, match cut), длительность, что звучит в момент перехода. Смотрите плотные кадры вокруг scene_changes. Карточки kind=editing_technique.",
+      "categories": ["editing"],
+      "dense": "around_scene_changes",
+      "missing": []
+    },
+    "zooms": {
+      "label": "Зумы и движение камеры",
+      "ask": "Понять, где и как двигается кадр: зумы, наезды, тряска, параллакс.",
+      "data": ["frames"],
+      "focus": "editing.camera_movement: сравнивайте соседние плотные кадры (масштаб объектов, края кадра). Укажите t_start/t_end каждого движения и характер (резкий/плавный, punch-in). Карточки kind=editing_technique / cinematography.",
+      "categories": ["editing", "cinematography"],
+      "dense": "around_scene_changes",
+      "missing": ["motion — автоматическая кривая движения кадра (оптический поток) ещё не установлена; движение оценивается моделью по кадрам"]
+    },
+    "music": {
+      "label": "Музыка",
+      "ask": "Понять музыку: настроение, темп, где акценты под монтаж.",
+      "data": ["sound"],
+      "focus": "sound.observations: где музыка, характер по звуковой карте и спектрограмме, совпадение акцентов со сменами сцен. Всё — оценки модели-классификатора, звук никто не слушал. Карточки kind=sound_technique, evidence не выше observed.",
+      "categories": ["sound"],
+      "dense": null,
+      "missing": ["separate — отделение музыки от голоса (Demucs) ещё не установлено", "tempo — BPM и тональность ещё не установлены"],
+      "license_note": "Извлечённая музыка — только для изучения. Использовать чужой трек в своём ролике без лицензии нельзя."
+    },
+    "sfx": {
+      "label": "Звуковые эффекты",
+      "ask": "Найти звуковые эффекты (свуши, щелчки, удары) и их связь с монтажом.",
+      "data": ["sound", "frames"],
+      "focus": "Метки эффектов из звуковой карты рядом со сменами кадров. Метки AST — ориентир, не доказательство. Карточки kind=sound_technique.",
+      "categories": ["sound", "editing"],
+      "dense": null,
+      "missing": ["separate — без отделения голоса эффекты под речью распознаются плохо"]
+    },
+    "captions": {
+      "label": "Субтитры и типографика",
+      "ask": "Понять стиль титров: шрифт, размер, позиция, анимация слов.",
+      "data": ["ocr", "frames"],
+      "focus": "editing.captions_style и graphics_titles: сколько слов на экране, выделение, позиция в безопасной зоне, как появляются. Плотные кадры показывают анимацию. Карточки kind=visual_style.",
+      "categories": ["visual-styles", "editing"],
+      "dense": {"t0": 0, "t1": 4.0, "step": 0.1},
+      "missing": []
+    },
+    "color": {
+      "label": "Цвет и свет",
+      "ask": "Понять цвет, свет и настроение картинки.",
+      "data": ["frames"],
+      "focus": "editing.light_color: палитра, контраст, тёплый/холодный, источники света, грейд. Карточки kind=visual_style.",
+      "categories": ["visual-styles", "cinematography"],
+      "dense": null,
+      "missing": ["palette — автоматическая палитра ещё не установлена; цвет оценивается моделью по кадрам"]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "note": "Ссылки автора: показываются в интерфейсе студии (левое меню) и в README. Пустые соцсети не показываются.",
+  "site": {"label": "Creative Studio онлайн", "url": "https://dolishx-creative-studio.pan-manager.chatgpt.site"},
+  "socials": [
+    {"label": "Instagram", "url": ""},
+    {"label": "TikTok", "url": ""},
+    {"label": "YouTube", "url": ""},
+    {"label": "Telegram", "url": ""}
+  ]
+}

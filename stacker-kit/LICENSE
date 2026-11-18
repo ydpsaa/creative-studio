@@ -1,0 +1,11 @@
+STACKER kit — style guide (README.md, README.ru.md), sticker pack (stickers/), prompts (tools/*.json)
+Copyright (c) 2026 Dolishx
+
+Licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+You may use, adapt and share these materials, including in commercial videos, as long as you give
+appropriate credit: "STACKER kit by Dolishx" with a link to the repository or https://dolishx-creative-studio.pan-manager.chatgpt.site
+
+The code in this folder (render_stacker.py, tools/*.py, tools/cutout.swift) is MIT-licensed (see ../LICENSE).
+The fonts in fonts/ are licensed under the SIL Open Font License 1.1 (fonts/OFL.txt).

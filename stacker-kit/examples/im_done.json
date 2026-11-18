@@ -1,0 +1,13 @@
+{
+  "title": "I'M DONE — demo (no voice yet: timing is simulated)",
+  "band_color": "#0E1E5C",
+  "counter": "01/30",
+  "caption_color": "#FFB547",
+  "script": "You tell everyone your idea. But. Your brain just heard... I'm done. There's a study on this. People who announced their goal worked on it less than people who kept it quiet. So build first. Talk later. Keep it quiet. Build it loud.",
+  "pages": [
+    {"rows": ["you tell", "everyone", "your idea."], "sticker": "G01_ideas/01_light_bulb.png"},
+    {"punch": "but."},
+    {"rows": ["your brain", "just heard..."], "sticker": "G01_ideas/02_human_brain_model.png"},
+    {"punch": "i'm done.", "sticker": "G09_strength/06_trophy_cup.png", "tear": "done."}
+  ]
+}

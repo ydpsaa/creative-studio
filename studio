@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Creative Studio launcher.
+#   ./studio start   — API + UI on http://127.0.0.1:8765 and the worker, in the background
+#   ./studio stop    — stop both
+#   ./studio ps      — which processes are running
+#   ./studio status  — data summary
+#   ./studio reel <scenario.json> [--plate desk1]  — render a vertical reel (motion/, Remotion)
+#   ./studio plate <desk video> --name desk1        — prepare a desk plate (finds green screen corners)
+#   ./studio site-connect <url> — подключить сайт-кабинет (ключ → Keychain); потом ./studio start запускает и синхронизацию
+#   ./studio mcp     — MCP server (stdio) for Claude / Codex / ChatGPT; see docs/MCP.md
+#   ./studio stacker <scenario.json> [--preview 1,2.5] — STACKER video (stacker-kit/)
+#   ./studio <cmd>   — any CLI command (import, import-url, import-analysis, search, backup, …)
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PY="$ROOT/.venv/bin/python"
+export PYTHONPATH="$ROOT/app/api"
+DATA="${STUDIO_DATA_DIR:-$ROOT/studio-data}"
+RUN="$DATA/cache/run"; mkdir -p "$RUN" "$DATA/logs"
+PORT="${STUDIO_PORT:-8765}"
+
+alive() { [[ -f "$RUN/$1.pid" ]] && kill -0 "$(cat "$RUN/$1.pid")" 2>/dev/null; }
+
+case "${1:-help}" in
+  start)
+    if [[ ! -f "$ROOT/app/web/dist/index.html" ]]; then
+      echo "Собираю интерфейс…"; (cd "$ROOT/app/web" && npm install --silent && npm run build --silent)
+    fi
+    "$PY" -m studio.cli seed >/dev/null
+    if alive api; then echo "API уже запущен (pid $(cat "$RUN/api.pid"))"; else
+      nohup "$PY" -m uvicorn studio.main:app --host 127.0.0.1 --port "$PORT" >>"$DATA/logs/api.log" 2>&1 &
+      echo $! >"$RUN/api.pid"; fi
+    if alive worker; then echo "Worker уже запущен (pid $(cat "$RUN/worker.pid"))"; else
+      nohup "$PY" -m studio.cli worker >>"$DATA/logs/worker.out" 2>&1 &
+      echo $! >"$RUN/worker.pid"; fi
+    if [[ -f "$DATA/site/site.json" ]]; then
+      if alive sync; then echo "Синхронизация с сайтом уже запущена (pid $(cat "$RUN/sync.pid"))"; else
+        nohup "$PY" -m studio.cli sync >>"$DATA/logs/sync.log" 2>&1 &
+        echo $! >"$RUN/sync.pid"; echo "Синхронизация с сайтом: запущена (лог: $DATA/logs/sync.log)"; fi
+    fi
+    sleep 1.5
+    echo "Студия: http://127.0.0.1:$PORT   (остановить: ./studio stop)";;
+  stop)
+    for p in api worker sync; do
+      if alive $p; then kill "$(cat "$RUN/$p.pid")" && echo "остановлен $p"; fi; rm -f "$RUN/$p.pid"; done;;
+  ps)
+    for p in api worker sync; do alive $p && echo "$p: работает (pid $(cat "$RUN/$p.pid"))" || echo "$p: остановлен"; done;;
+  reel)  shift; exec "$PY" "$ROOT/scripts/make_reel.py" "$@";;
+  plate) shift; exec "$PY" "$ROOT/scripts/plate_corners.py" "$@";;
+  mcp)   exec "$PY" -m studio.mcp_server;;
+  stacker) shift; exec "$PY" "$ROOT/stacker-kit/render_stacker.py" "$@";;
+  help|-h|--help)
+    sed -n '2,11p' "$0"; "$PY" -m studio.cli --help;;
+  *) exec "$PY" -m studio.cli "$@";;
+esac

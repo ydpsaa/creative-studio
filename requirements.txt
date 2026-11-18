@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+imageio-ffmpeg
+av
+mlx-whisper
+ocrmac
+numpy
+pillow
+httpx
+mcp>=2.3,<3
+transformers
+librosa
+matplotlib
