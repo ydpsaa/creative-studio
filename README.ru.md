@@ -46,7 +46,7 @@ Creative Studio — локальная студия для авторов рол
 - около 3 ГБ на диске под модели.
 
 ```bash
-git clone https://github.com/<you>/creative-studio.git && cd creative-studio
+git clone https://github.com/ydpsaa/creative-studio.git && cd creative-studio
 uv venv --python 3.13 .venv
 uv pip install --python .venv/bin/python -r requirements.lock.txt
 (cd app/web && npm install && npm run build)
@@ -82,9 +82,10 @@ Claude Desktop, Codex, Cursor и другие клиенты — в [docs/CONNEC
 ## Подписаться
 
 - 🌐 **Creative Studio онлайн:** https://dolishx-creative-studio.pan-manager.chatgpt.site
-<!-- соцсети: добавить ссылки сюда -->
+- 📸 **Instagram:** [@dolishx](https://www.instagram.com/dolishx/)
+<!-- другие соцсети: добавить ссылки сюда -->
 
-Автор — **Dolishx**. Сделали ролик на STACKER — отметьте нас, нам интересно посмотреть.
+Автор — **Dolishx** ([@dolishx](https://www.instagram.com/dolishx/)). Сделали ролик на STACKER — отметьте нас, нам интересно посмотреть.
 
 ## Лицензия
 

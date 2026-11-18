@@ -32,7 +32,7 @@ case "${1:-help}" in
     if alive worker; then echo "Worker уже запущен (pid $(cat "$RUN/worker.pid"))"; else
       nohup "$PY" -m studio.cli worker >>"$DATA/logs/worker.out" 2>&1 &
       echo $! >"$RUN/worker.pid"; fi
-    if [[ -f "$DATA/site/site.json" ]]; then
+    if [[ -f "$DATA/site/site.json" && "${STUDIO_NO_SYNC:-0}" != "1" ]]; then
       if alive sync; then echo "Синхронизация с сайтом уже запущена (pid $(cat "$RUN/sync.pid"))"; else
         nohup "$PY" -m studio.cli sync >>"$DATA/logs/sync.log" 2>&1 &
         echo $! >"$RUN/sync.pid"; echo "Синхронизация с сайтом: запущена (лог: $DATA/logs/sync.log)"; fi

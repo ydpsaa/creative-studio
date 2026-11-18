@@ -91,4 +91,4 @@ STACKER — стиль коротких роликов. Слова появля�
 
 ## Ссылки
 - Creative Studio онлайн (без установки): https://dolishx-creative-studio.pan-manager.chatgpt.site
-- Соцсети — в главном [README](../README.ru.md#подписаться).
+- Instagram: [@dolishx](https://www.instagram.com/dolishx/)

@@ -47,7 +47,7 @@ Requirements:
 - ~3 GB of free disk space for models.
 
 ```bash
-git clone https://github.com/<you>/creative-studio.git && cd creative-studio
+git clone https://github.com/ydpsaa/creative-studio.git && cd creative-studio
 uv venv --python 3.13 .venv
 uv pip install --python .venv/bin/python -r requirements.lock.txt
 (cd app/web && npm install && npm run build)
@@ -92,14 +92,14 @@ This repository grows with the studio behind it. **Watch → Custom → Releases
 ## Follow
 
 - 🌐 **Creative Studio online:** https://dolishx-creative-studio.pan-manager.chatgpt.site
-<!-- socials: add your links here, e.g.
-- Instagram: https://instagram.com/…
+- 📸 **Instagram:** [@dolishx](https://www.instagram.com/dolishx/)
+<!-- more socials: add your links here, e.g.
 - TikTok: https://tiktok.com/@…
 - YouTube: https://youtube.com/@…
 - Telegram: https://t.me/…
 -->
 
-Made by **Dolishx**. If you make a video with the STACKER kit, tag us. We'd love to see it.
+Made by **Dolishx** ([@dolishx](https://www.instagram.com/dolishx/)). If you make a video with the STACKER kit, tag us. We'd love to see it.
 
 ## License
 

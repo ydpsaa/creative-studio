@@ -111,7 +111,7 @@ def archive_plan(client,p,plan,records):
         csv_out=io.StringIO();writer=csv.DictWriter(csv_out,fieldnames=['id','duration','visual','audio','source','ready']);writer.writeheader();writer.writerows(plan['data']['shots']);z.writestr('storyboard.csv',csv_out.getvalue())
         for f in source_files:z.write(assets/f['id'],'media/'+f['id'][:18]+'-'+Path(f['name']).name)
         z.writestr('manifest.json',json.dumps({'plan_id':plan['id'],'revision':plan['revision'],'files':source_files},ensure_ascii=False,indent=2))
-    if output.stat().st_size>64*1024*1024:raise ValueError('Пакет сохранён в студии, но больше лимита сайта 64 МБ')
+    if output.stat().st_size>32*1024*1024:raise ValueError('Пакет сохранён в студии, но больше лимита сайта 32 МБ')
     r=client.h.post('/api/studio/production/files',params={'plan':plan['id'],'name':output.name,'revision':plan['revision']},content=output.read_bytes(),headers={'Content-Type':'application/octet-stream'})
     client._ok(r);atomic(state_path,{'signature':signature})
 

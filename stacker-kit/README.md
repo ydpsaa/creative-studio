@@ -106,4 +106,4 @@ With Creative Studio connected to Claude Code (see [docs/CONNECT.md](../docs/CON
 
 ## Links
 - Creative Studio (hosted version, no setup): https://dolishx-creative-studio.pan-manager.chatgpt.site
-- Socials: see the main [README](../README.md#follow).
+- Instagram: [@dolishx](https://www.instagram.com/dolishx/)
