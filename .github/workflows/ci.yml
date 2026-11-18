@@ -19,7 +19,7 @@ jobs:
           cache: npm
           cache-dependency-path: app/web/package-lock.json
       - name: Python deps (portable subset — MLX / Apple Vision / models are macOS-only)
-        run: pip install fastapi uvicorn python-multipart pydantic httpx pillow numpy imageio-ffmpeg "mcp>=2.3,<3"
+        run: pip install fastapi uvicorn python-multipart pydantic httpx pillow numpy imageio-ffmpeg av "mcp>=2.3,<3"
       - name: Compile all Python
         run: python -m compileall -q app/api stacker-kit
       - name: Build the UI
