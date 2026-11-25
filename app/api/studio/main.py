@@ -675,6 +675,10 @@ def stk_delete(pid: str):
     return _stk(lambda s: s.delete(pid))
 
 
+from .clipping import router as clipping_router
+app.include_router(clipping_router)
+
+
 # ------------------------------------------------------------------ static UI
 @app.get("/{full_path:path}")
 def spa(full_path: str):

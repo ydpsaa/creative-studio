@@ -177,6 +177,27 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX ix_review_events ON review_events(item_id);
     """,
+    # 3 — organic clipping workspace (USD cents)
+    """
+    CREATE TABLE clip_campaigns (
+      id TEXT PRIMARY KEY, title TEXT NOT NULL, platform TEXT NOT NULL,
+      url TEXT NOT NULL, rules TEXT NOT NULL, rights TEXT NOT NULL,
+      confirmed INTEGER NOT NULL DEFAULT 0, state TEXT NOT NULL DEFAULT 'draft',
+      deadline TEXT NOT NULL DEFAULT '', cpm_cents INTEGER NOT NULL,
+      min_views INTEGER NOT NULL, cap_cents INTEGER NOT NULL,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE clipping_items (
+      id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL REFERENCES clip_campaigns(id),
+      source_id TEXT NOT NULL REFERENCES sources(id), t0 REAL NOT NULL, t1 REAL NOT NULL,
+      hook TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'planned',
+      output_rel TEXT, captions_rel TEXT, error TEXT, post_url TEXT,
+      eligible_views INTEGER NOT NULL DEFAULT 0, cost_cents INTEGER NOT NULL DEFAULT 0,
+      paid_cents INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+      UNIQUE(campaign_id,source_id,t0,t1)
+    );
+    CREATE UNIQUE INDEX ux_clipping_post ON clipping_items(post_url) WHERE post_url IS NOT NULL;
+    """,
 ]
 
 
