@@ -12,9 +12,10 @@ import Projects from './pages/Projects'
 import Settings from './pages/Settings'
 import Review from './pages/Review'
 import Stacker from './pages/Stacker'
+import Clipping from './pages/Clipping'
 
 const NAV: [string, string][] = [
-  ['inbox', 'Входящие'], ['library', 'Библиотека'], ['knowledge', 'Методы и стили'], ['assets', 'Звуки и ассеты'], ['review', 'Ревью'], ['stacker', 'Стакер'],
+  ['inbox', 'Входящие'], ['library', 'Библиотека'], ['knowledge', 'Методы и стили'], ['assets', 'Звуки и ассеты'], ['review', 'Ревью'], ['stacker', 'Стакер'], ['clipping', 'Clipping'],
   ['brands', 'Бренды'], ['projects', 'Проекты'], ['settings', 'Настройки'],
 ]
 
@@ -43,6 +44,7 @@ function App() {
     case 'assets': body = <Assets />; break
     case 'review': body = <Review />; break
     case 'stacker': body = <Stacker id={parts[1]} />; break
+    case 'clipping': body = <Clipping />; break
     case 'brands': body = <Brands />; break
     case 'projects': body = <Projects id={parts[1]} />; break
     case 'settings': body = <Settings />; break

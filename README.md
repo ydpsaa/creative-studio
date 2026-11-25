@@ -23,6 +23,8 @@ Creative Studio is a local studio for creators. You feed it videos you learn fro
 | **STACKER kit** | A word-stack style with a guide, a renderer, **162 die-cut stickers** and text-first sound design (words are typed, not hit). Build it on the **Стакер** page in the app — pages, stickers from the catalog, your voice, preview frames, one button to render — or from the CLI: `./studio stacker scenario.json`. 9:16 for Reels, 4:5 for carousels. [Open the kit →](stacker-kit/README.md) |
 | **Review board** | One page to pick, reject and comment on everything your AI generated: stickers, test videos, sounds, style docs. Your AI reads your decisions back through MCP. |
 
+**Clipping Factory:** local, authorized organic clips with transcript-based candidate ranges, batch rendering and a payout ledger. [Workflow and limitations →](docs/CLIPPING.md)
+
 ## How it works
 
 ```

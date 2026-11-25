@@ -26,5 +26,7 @@ jobs:
         run: cd app/web && npm ci && npm run build
       - name: Smoke test (API, UI, STACKER render, Review, doctor)
         run: python tests/ci_smoke.py
+      - name: Clipping Factory smoke test
+        run: python tests/clipping_smoke.py
       - name: STACKER demo render
         run: python stacker-kit/render_stacker.py stacker-kit/examples/im_done.json --out /tmp/demo.mp4

@@ -674,6 +674,35 @@ def make_video(idea: str) -> str:
             "project-docs/1 с основаниями в раскадровке и сохрани (submit_project_docs).")
 
 
+# ------------------------------------------------------------------ Clipping Factory
+@mcp.tool()
+def clipping_overview() -> dict:
+    """Local campaign catalog links, briefs, clips and manually recorded payouts."""
+    from . import clipping
+    return clipping.overview()
+
+
+@mcp.tool()
+def clipping_suggest(source_id: str, minimum: int = 15, maximum: int = 45, count: int = 10) -> dict:
+    """Suggest transcript-based ranges for owned/authorized footage. Not a virality score."""
+    from . import clipping
+    return clipping.candidates(source_id, minimum, maximum, count)
+
+
+@mcp.tool()
+def clipping_create_batch(campaign_id: str, source_id: str, items: list[dict]) -> dict:
+    """Create up to ten clip ranges for an active, owner-confirmed campaign. No publishing."""
+    from . import clipping
+    return clipping.create_batch({"campaign_id": campaign_id, "source_id": source_id, "items": items})
+
+
+@mcp.tool()
+def clipping_render(clip_id: str, burn_captions: bool = False) -> dict:
+    """Render one local clip. Review MP4 and SRT before posting; never auto-publish."""
+    from . import clipping
+    return clipping.render(clip_id, {"burn_captions": burn_captions})
+
+
 def main():
     config.ensure_dirs()
     mcp.run("stdio")
